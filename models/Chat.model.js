@@ -1,19 +1,22 @@
 const { model, Schema } = require("mongoose");
 
 const ChatSchema = new Schema({
-  message: {
+  content: {
     type: String,
-    required: true,
+    // required: true,
   },
-  chatRoom: {
+  chatRoomId: {
     type: Schema.Types.ObjectId,
-    required: true,
+    // required: true,
     ref: "ChatRoom",
   },
   user: {
-    type: Schema.Types.ObjectId,
-    required: true,
-    ref: "User",
+    id: {
+      type: Schema.Types.ObjectId,
+      ref: "User"
+    },
+    username: String,
+    imageUri: String
   },
   createdAt: {
     type: Date,
@@ -21,8 +24,8 @@ const ChatSchema = new Schema({
   },
 });
 
-// ChatSchema.methods.addNewMessage = function(newMessage, callback) {
-//     newMessage.save(callback);
-// }
-
 module.exports = Chat = model("Chat", ChatSchema);
+
+module.exports.addNewChat = function (newChat, callback) {
+  newChat.save(callback);
+};
