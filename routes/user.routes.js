@@ -3,11 +3,13 @@ const {
   getCurrentUser,
   getUsers,
   getUserById,
-  getAllAnotherUsers
+  getAllAnotherUsers,
+  update
 } = require("../controllers/user/index");
 
 const userRoutes = Router();
 
+userRoutes.put("/edit/:id", update);
 userRoutes.get("/current-user", getCurrentUser);
 userRoutes.get("/:id/list-users", getAllAnotherUsers);
 userRoutes.get("/:id", getUserById);

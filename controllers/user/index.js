@@ -7,6 +7,18 @@ const {
 const { generateToken } = require("../../utils/token-management");
 const bcrypt = require("bcryptjs");
 const mongoose = require("mongoose");
+const multer = require("multer");
+
+const storage = multer.diskStorage({
+  destination(req, file, callback) {
+    callback(null, "./images");
+  },
+  filename(req, file, callback) {
+    callback(null, `${file.fieldname}_${Date.now()}_${file.originalname}`);
+  },
+});
+
+const upload = multer({ storage });
 
 exports.login = (req, res) => {
   const { username, password } = req.body;
@@ -61,7 +73,7 @@ exports.register = async (req, res) => {
             email,
             username,
             password: hashPassword,
-            imageUri
+            imageUri,
           });
           const userSave = await newUser.save();
           const token = generateToken(userSave);
@@ -101,7 +113,39 @@ exports.getUserById = (req, res) => {
 
 exports.getAllAnotherUsers = (req, res) => {
   const myUserId = req.params.id;
-  User.find({ _id: { $ne: mongoose.Types.ObjectId(myUserId) } }, (err, users) => {
-    res.send(users);
-  })
-}
+  User.find(
+    { _id: { $ne: mongoose.Types.ObjectId(myUserId) } },
+    (err, users) => {
+      res.send(users);
+    }
+  );
+};
+
+exports.update = (req, res) => {
+  const {
+    params: { id },
+    body,
+  } = req;
+  //User.findByIdAndUpdate(id, body, {new: true})
+
+  User.findByIdAndUpdate(id, body)
+    .then((data) => {
+      if (!data) {
+        res.status(404).json({
+          resultcode: 1,
+          message: `Cannot update user with id ${id}!`,
+        });
+      }
+      res.status(201).json({
+        resultcode: 0,
+        message: "User updated!",
+        user: data,
+      });
+    })
+    .catch((err) => {
+      res.status(500).json({
+        resultcode: 1,
+        message: "Error updating user with id " + id,
+      });
+    });
+};
