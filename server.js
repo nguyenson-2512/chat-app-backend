@@ -134,11 +134,11 @@ io.on("connection", function (socket) {
     socket.emit('onlineUsers', onlineUsers);
   });
 
-  socket.on('disconnect', function (data) {
-    socket.broadcast.emit('disconnected', onlineUsers[socket.id].username);
-    delete onlineUsers[socket.id];
-    socket.broadcast.emit('onlineUsers', onlineUsers);
-  });
+  // socket.on('disconnect', function (data) {
+  //   socket.broadcast.emit('disconnected', onlineUsers[socket.id].username);
+  //   delete onlineUsers[socket.id];
+  //   socket.broadcast.emit('onlineUsers', onlineUsers);
+  // });
 });
 io.listen(8000);
 

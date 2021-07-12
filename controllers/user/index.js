@@ -126,26 +126,24 @@ exports.update = (req, res) => {
     params: { id },
     body,
   } = req;
-  //User.findByIdAndUpdate(id, body, {new: true})
 
-  User.findByIdAndUpdate(id, body)
-    .then((data) => {
-      if (!data) {
-        res.status(404).json({
-          resultcode: 1,
-          message: `Cannot update user with id ${id}!`,
-        });
-      }
-      res.status(201).json({
-        resultcode: 0,
-        message: "User updated!",
-        user: data,
+  User.findByIdAndUpdate(id, body, { new: true }, function (err, data) {
+    if (!data) {
+      return res.status(404).json({
+        resultcode: 1,
+        message: `Cannot update user with id ${id}!`,
       });
-    })
-    .catch((err) => {
-      res.status(500).json({
+    }
+    if (err) {
+      return res.status(500).json({
         resultcode: 1,
         message: "Error updating user with id " + id,
       });
+    }
+    return res.status(201).json({
+      resultcode: 0,
+      message: "User updated!",
+      user: data,
     });
+  });
 };

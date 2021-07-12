@@ -93,3 +93,16 @@ exports.getChatRoom = (req, res) => {
     return res.status(200).json({ id: result?._id, resultcode: 0 });
   });
 };
+
+exports.deleteChatRoom = (req, res) => {
+  const {id} = req.params;
+  ChatRoom.findOneAndRemove({_id: id}, function(err, data) {
+    if (err) {
+      return res.status(500).json({
+        resultcode: 1,
+        message: "Delete failed chat-room",
+      });
+    }
+    return res.status(200).json({ data, resultcode: 0 });
+  })
+}

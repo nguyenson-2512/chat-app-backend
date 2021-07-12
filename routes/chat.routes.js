@@ -4,6 +4,7 @@ const {
   getAllChatRooms,
   createChatRoom,
   getChatRoom,
+  deleteChatRoom,
 } = require("../controllers/chat-room/index");
 const {
   getAllChats,
@@ -16,6 +17,7 @@ const { catchErrors } = require("../handlers/errorHandlers");
 const router = Router();
 
 router.post("/chatroom", getChatRoom);
+router.delete("/delete/:id", deleteChatRoom);
 router.get("/:userId", getAllChatRooms);
 router.get("/:id/chats/:chatId", getChat);
 router.get("/:id/chats", getAllChats);
