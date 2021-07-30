@@ -11,6 +11,7 @@ const {
   getChat,
   createChat,
   deleteChat,
+  like,
 } = require("../controllers/chat/index");
 const { catchErrors } = require("../handlers/errorHandlers");
 
@@ -21,8 +22,9 @@ router.delete("/delete/:id", deleteChatRoom);
 router.get("/:userId", getAllChatRooms);
 router.get("/:id/chats/:chatId", getChat);
 router.get("/:id/chats", getAllChats);
-router.post("/:id/chats/:chatId", deleteChat);
+router.post("/item/:chatId", deleteChat);
 router.post("/:id/chats", createChat);
 router.post("/", createChatRoom);
+router.put("/like/:id", like);
 
 module.exports = router;

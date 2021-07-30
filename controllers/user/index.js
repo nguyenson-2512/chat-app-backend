@@ -147,3 +147,69 @@ exports.update = (req, res) => {
     });
   });
 };
+
+exports.sendRequest = (req, res) => {
+  const { sender, receiver } = req.body;
+
+  User.findById(sender.id, (err, user) => {
+    if (err) return console.error(err);
+    user.sendRequest.push(receiver);
+    user.save();
+  });
+
+  User.findById(receiver.id, (err, user) => {
+    if (err) return console.error(err);
+    user.request.push(sender);
+    user.save();
+  });
+
+  return res.status(201).json({
+    resultcode: 0,
+    message: "Success",
+  });
+};
+
+exports.getRequestList = (req, res) => {
+  const myUserId = req.params.id;
+  User.findById(myUserId)
+    .select("sendRequest request friendList")
+    .then((response) => {
+      return res.status(201).json({
+        resultcode: 0,
+        data: response,
+      });
+    });
+};
+
+exports.acceptRequest = (req, res) => {
+  const { acceptorUser, acceptedUser } = req.body;
+
+  User.findById(acceptorUser.id, (err, user) => {
+    if (err) return console.error(err);
+    user.friendList.push(acceptedUser);
+    user.request.splice(
+      user.request.findIndex(function (i) {
+        return i.id == acceptedUser.id;
+      }),
+      1
+    );
+    user.save();
+  });
+
+  User.findById(acceptedUser.id, (err, user) => {
+    if (err) return console.error(err);
+    user.friendList.push(acceptorUser);
+    user.sendRequest.splice(
+      user.sendRequest.findIndex(function (i) {
+        return i.id == acceptorUser.id;
+      }),
+      1
+    );
+    user.save();
+  });
+
+  return res.status(201).json({
+    resultcode: 0,
+    message: "Success",
+  });
+};

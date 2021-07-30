@@ -37,6 +37,36 @@ const UserSchema = new Schema(
       type: String,
       // required: true,
     },
+    sendRequest: [
+      {
+        id: {
+          type: String,
+          required: true,
+        },
+        username: String,
+        imageUri: String,
+      },
+    ],
+    request: [
+      {
+        id: {
+          type: String,
+          required: true,
+        },
+        username: String,
+        imageUri: String,
+      },
+    ],
+    friendList: [
+      {
+        id: {
+          type: String,
+          required: true,
+        },
+        username: String,
+        imageUri: String,
+      },
+    ],
   },
   {
     timestamps: true,

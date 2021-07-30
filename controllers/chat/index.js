@@ -135,7 +135,7 @@ exports.createChat = (req, res, next) => {
 
 //delete chat item by id
 exports.deleteChat = (req, res) => {
-  const chatId = req.params.id;
+  const chatId = req.params.chatId;
   Chat.findById(chatId)
     .then((chat) => chat.remove().then(() => res.json({ success: true })))
     .catch((err) => res.status(404).json({ success: false }));
@@ -174,4 +174,33 @@ exports.deleteChat = (req, res) => {
   //       message: "Error delete chat with id",
   //     });
   //   });
+};
+
+exports.like = (req, res) => {
+  const chatId = req.params.chatId;
+  Chat.findByIdAndUpdate(
+    chatId,
+    { like: true },
+    { new: true },
+    function (err, data) {
+      if (!data) {
+        return res.status(404).json({
+          resultcode: 1,
+          message: `Cannot update chat item with id ${chatId}!`,
+        });
+      }
+      if (err) {
+        return res.status(500).json({
+          resultcode: 1,
+          message: "Error updating chat item with id " + chatId,
+        });
+      }
+
+      return res.status(201).json({
+        resultcode: 0,
+        message: "Chat item updated!",
+        chat: data,
+      });
+    }
+  );
 };

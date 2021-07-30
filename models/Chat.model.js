@@ -22,6 +22,10 @@ const ChatSchema = new Schema({
     type: Date,
     default: Date.now,
   },
+  like: {
+    type: Boolean,
+    required: false,
+  }
 });
 
 module.exports = Chat = model("Chat", ChatSchema);
